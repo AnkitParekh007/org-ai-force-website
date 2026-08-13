@@ -32,5 +32,6 @@ test("ships agent imagery and social preview metadata", async () => {
   assert.match(page, /Search agents/);
   await access(new URL("../public/og.png", import.meta.url));
   await access(new URL("../public/agents/fronto.png", import.meta.url));
+  await access(new URL("../public/generated/hero-squad.png", import.meta.url));
   await assert.rejects(access(new URL("../app/_sites-preview", root)));
 });

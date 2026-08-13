@@ -68,6 +68,22 @@ function Avatar({ agent, className = "" }: { agent: Agent; className?: string })
   return <img className={`avatar ${className}`} src={`/agents/${agent.slug}.png`} alt={`${agent.name}, ${agent.role} AI agent`} />;
 }
 
+const accentByCategory: Record<string, string> = {
+  Engineering: "#55e7ff", Product: "#b8ff36", Operations: "#ff8d3b",
+  Knowledge: "#b98cff", Leadership: "#f2d46f", Finance: "#52e3a4", Support: "#ff69b4",
+};
+
+function AvatarScene({ agent }: { agent: Agent }) {
+  return <div className="avatar-scene" style={{ "--agent-accent": accentByCategory[agent.category] || "#b8ff36" } as React.CSSProperties}>
+    <div className="avatar-aura" />
+    <div className="avatar-orbit"><i/><i/><i/></div>
+    <Avatar agent={agent} className="avatar-ghost" />
+    <Avatar agent={agent} className="avatar-main" />
+    <div className="avatar-glass" />
+    <div className="avatar-pedestal"><span/><b/></div>
+  </div>;
+}
+
 export default function Home() {
   const [theme, setTheme] = useState("dark");
   const [filter, setFilter] = useState("All");
@@ -90,6 +106,8 @@ export default function Home() {
     const y = (e.clientY - r.top) / r.height - .5;
     el.style.setProperty("--rx", `${-y * 8}deg`);
     el.style.setProperty("--ry", `${x * 10}deg`);
+    el.style.setProperty("--mx", `${(x + .5) * 100}%`);
+    el.style.setProperty("--my", `${(y + .5) * 100}%`);
   };
 
   return (
@@ -108,12 +126,16 @@ export default function Home() {
           <div className="hero-actions"><a className="button primary" href="#agents">Explore the force <span>↘</span></a><a className="button ghost" href="#system">See how it works</a></div>
           <div className="trust-line"><span><b>55</b> specialist agents</span><span><b>8</b> disciplines</span><span><b>1</b> governed system</span></div>
         </div>
-        <div className="hero-stage" aria-label="Animated AI agent avatars">
+        <div className="hero-stage" aria-label="Animated 3D AI agent avatars" onMouseMove={tilt} onMouseLeave={e=>{e.currentTarget.style.setProperty('--rx','0deg');e.currentTarget.style.setProperty('--ry','0deg')}}>
           <div className="orb orb-one"/><div className="orb orb-two"/>
           <div className="orbit orbit-a"/><div className="orbit orbit-b"/>
-          <div className="hero-avatar hero-avatar-main"><Avatar agent={agents[16]} /><span className="agent-chip"><b>Producto</b><small>Product strategy online</small></span></div>
-          <div className="hero-avatar hero-avatar-left"><Avatar agent={agents[0]} /></div>
-          <div className="hero-avatar hero-avatar-right"><Avatar agent={agents[12]} /></div>
+          <div className="squad-platform"><i/><i/><b/></div>
+          <div className="hero-squad-wrap">
+            <img className="hero-squad-shadow" src="/generated/hero-squad.png" alt="" aria-hidden="true" />
+            <img className="hero-squad" src="/generated/hero-squad.png" alt="Producto, Fronto and Dbo as a cinematic 3D AI agent squad" />
+            <div className="hero-squad-shine" />
+          </div>
+          <span className="agent-chip"><b>3D agent force</b><small>Hover to explore the depth field</small></span>
           <div className="signal s1">✦</div><div className="signal s2">⌁</div><div className="signal s3">●</div>
         </div>
       </section>
@@ -140,8 +162,8 @@ export default function Home() {
         <div className="agents-head"><div><span className="section-no">03 / AGENT DIRECTORY</span><h2>Find your <em>specialist.</em></h2></div><p>{shown.length.toString().padStart(2,"0")} agents in view</p></div>
         <div className="toolbar"><div className="filters" role="group" aria-label="Filter agents by discipline">{categories.map(c=><button key={c} className={filter===c?"active":""} onClick={()=>setFilter(c)}>{c}</button>)}</div><label className="search"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search agents" aria-label="Search agents" /></label></div>
         <div className="agent-grid">
-          {shown.map((agent, i)=><button className="agent-card" key={agent.slug} onMouseMove={tilt} onMouseLeave={e=>{e.currentTarget.style.setProperty('--rx','0deg');e.currentTarget.style.setProperty('--ry','0deg')}} onClick={()=>setSelected(agent)} style={{"--delay":`${(i%12)*35}ms`} as React.CSSProperties}>
-            <div className="agent-visual"><span className="status-dot"/><Avatar agent={agent}/><div className="halo"/></div>
+          {shown.map((agent, i)=><button className="agent-card" key={agent.slug} onMouseMove={tilt} onMouseLeave={e=>{e.currentTarget.style.setProperty('--rx','0deg');e.currentTarget.style.setProperty('--ry','0deg')}} onClick={()=>setSelected(agent)} style={{"--delay":`${(i%12)*35}ms`,"--agent-accent":accentByCategory[agent.category] || "#b8ff36"} as React.CSSProperties}>
+            <div className="agent-visual"><span className="status-dot"/><span className="depth-label">LIVE / 3D</span><AvatarScene agent={agent}/></div>
             <div className="agent-meta"><span>{agent.category}</span><h3>{agent.name}</h3><p>{agent.role}</p><i>↗</i></div>
           </button>)}
         </div>
@@ -153,7 +175,7 @@ export default function Home() {
       <footer className="shell"><a className="brand" href="#top"><span className="brand-mark">O</span><span>ORG AI FORCE</span></a><p>Enterprise agent operations, made visible.</p><a href="https://github.com/AnkitParekh007/org-ai-force" target="_blank" rel="noreferrer">View source ↗</a></footer>
 
       {selected && <div className="modal-backdrop" onClick={()=>setSelected(null)} role="presentation"><section className="agent-modal" role="dialog" aria-modal="true" aria-label={`${selected.name} details`} onClick={e=>e.stopPropagation()}>
-        <button className="modal-close" onClick={()=>setSelected(null)} aria-label="Close">×</button><div className="modal-visual"><Avatar agent={selected}/></div><div className="modal-copy"><span className="section-no">{selected.category} AGENT</span><h2>{selected.name}</h2><h3>{selected.role}</h3><p>{selected.description}</p><ul><li><b>Ask</b> for analysis, answers, and recommendations.</li><li><b>Plan</b> structured work with visible steps and risks.</li><li><b>Act</b> through governed tools and human approvals.</li></ul><button className="button primary" onClick={()=>setSelected(null)}>Back to the force</button></div>
+        <button className="modal-close" onClick={()=>setSelected(null)} aria-label="Close">×</button><div className="modal-visual"><AvatarScene agent={selected}/></div><div className="modal-copy"><span className="section-no">{selected.category} AGENT</span><h2>{selected.name}</h2><h3>{selected.role}</h3><p>{selected.description}</p><ul><li><b>Ask</b> for analysis, answers, and recommendations.</li><li><b>Plan</b> structured work with visible steps and risks.</li><li><b>Act</b> through governed tools and human approvals.</li></ul><button className="button primary" onClick={()=>setSelected(null)}>Back to the force</button></div>
       </section></div>}
     </main>
   );
