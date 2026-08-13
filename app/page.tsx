@@ -77,7 +77,6 @@ function AvatarScene({ agent }: { agent: Agent }) {
   return <div className="avatar-scene" style={{ "--agent-accent": accentByCategory[agent.category] || "#b8ff36" } as React.CSSProperties}>
     <div className="avatar-aura" />
     <div className="avatar-orbit"><i/><i/><i/></div>
-    <Avatar agent={agent} className="avatar-ghost" />
     <Avatar agent={agent} className="avatar-main" />
     <div className="avatar-glass" />
     <div className="avatar-pedestal"><span/><b/></div>
@@ -131,7 +130,6 @@ export default function Home() {
           <div className="orbit orbit-a"/><div className="orbit orbit-b"/>
           <div className="squad-platform"><i/><i/><b/></div>
           <div className="hero-squad-wrap">
-            <img className="hero-squad-shadow" src="/generated/hero-squad.png" alt="" aria-hidden="true" />
             <img className="hero-squad" src="/generated/hero-squad.png" alt="Producto, Fronto and Dbo as a cinematic 3D AI agent squad" />
             <div className="hero-squad-shine" />
           </div>
