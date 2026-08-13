@@ -11,14 +11,14 @@ async function render() {
   return worker.fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
 }
 
-test("server-renders the Org AI Force experience", async () => {
+test("server-renders the AI Employee Force experience", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /<title>Org AI Force/);
-  assert.match(html, /Meet the force/);
-  assert.match(html, /55 specialized AI agents/);
-  assert.match(html, /Find your/);
+  assert.match(html, /<title>AI Employee Force/);
+  assert.match(html, /Your AI workforce/);
+  assert.match(html, /specialist AI employees/);
+  assert.match(html, /Meet your/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
 

@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
+const geist = DM_Sans({ variable: "--font-geist", subsets: ["latin"] });
 const mono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Org AI Force — Your organization, augmented",
-  description: "Meet 55 specialized, governed AI agents built to make every team more capable.",
+  title: "AI Employee Force — Enterprise AI workforce & agent marketplace",
+  description: "Discover, deploy, and orchestrate role-based AI employees across engineering, product, operations, and more. Enterprise-ready governance for AI-native organizations.",
   icons: { icon: "/favicon.svg" },
   openGraph: {
-    title: "Org AI Force — Your organization, augmented",
-    description: "55 specialized AI agents. One governed operating layer.",
+    title: "AI Employee Force — Build your AI workforce",
+    description: "Hire specialized AI employees, orchestrate multi-agent execution, and govern AI-native operations at enterprise scale.",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Org AI Force agent team" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Org AI Force — Your organization, augmented",
-    description: "55 specialized AI agents. One governed operating layer.",
+    title: "AI Employee Force — Build your AI workforce",
+    description: "Hire specialized AI employees, orchestrate multi-agent execution, and govern AI-native operations at enterprise scale.",
     images: ["/og.png"],
   },
 };
