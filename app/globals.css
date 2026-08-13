@@ -28,3 +28,10 @@ body{background-color:var(--bg);background-image:radial-gradient(ellipse 90% 55%
 @media(max-width:900px){.legacy-heading{grid-template-columns:1fr;gap:20px}.legacy-grid,.usecase-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.legacy-section{padding-block:80px}.legacy-grid,.usecase-grid{grid-template-columns:1fr}.nav{width:calc(100% - 20px)}.hero h1{font-size:43px}.cta{border-radius:0}.section-subcopy{font-size:13px!important}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Transparent agent cutouts: keep the 3D treatment without pale image backplates. */
+.avatar-scene .avatar{mask-image:none;mix-blend-mode:normal;filter:saturate(1.12) contrast(1.04)}
+.avatar-aura{background:radial-gradient(circle,color-mix(in srgb,var(--agent-accent) 32%,transparent),color-mix(in srgb,var(--agent-accent) 12%,transparent) 42%,transparent 70%);filter:blur(18px);opacity:.52}
+.avatar-glass{background:linear-gradient(120deg,rgba(34,211,238,.09),transparent 30%,transparent 72%,color-mix(in srgb,var(--agent-accent) 14%,transparent))}
+:root[data-theme="dark"] .agent-visual:before{background:linear-gradient(115deg,transparent 28%,rgba(34,211,238,.055) 46%,transparent 64%)}
+:root[data-theme="dark"] .avatar-aura{opacity:.38}
