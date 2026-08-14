@@ -137,6 +137,7 @@ export default function Home() {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         entry.target.classList.add("in-view");
+        entry.target.addEventListener("transitionend", () => entry.target.classList.add("motion-settled"), { once: true });
         observer.unobserve(entry.target);
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
@@ -145,10 +146,8 @@ export default function Home() {
     const updateScrollMotion = () => {
       frame = 0;
       const max = document.documentElement.scrollHeight - innerHeight;
-      root.style.setProperty("--scroll-progress", `${max > 0 ? scrollY / max : 0}`);
-      const heroShift = Math.min(scrollY, 900);
-      root.style.setProperty("--orb-one-shift", `${heroShift * .055}px`);
-      root.style.setProperty("--orb-two-shift", `${heroShift * -.035}px`);
+      const progress = document.querySelector<HTMLElement>(".scroll-progress");
+      if (progress) progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(updateScrollMotion);
@@ -164,13 +163,20 @@ export default function Home() {
 
   const tilt = (e: MouseEvent<HTMLElement>) => {
     const el = e.currentTarget;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - .5;
-    const y = (e.clientY - r.top) / r.height - .5;
-    el.style.setProperty("--rx", `${-y * 8}deg`);
-    el.style.setProperty("--ry", `${x * 10}deg`);
-    el.style.setProperty("--mx", `${(x + .5) * 100}%`);
-    el.style.setProperty("--my", `${(y + .5) * 100}%`);
+    if (el.dataset.tiltBusy) return;
+    el.dataset.tiltBusy = "true";
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    requestAnimationFrame(() => {
+      const r = el.getBoundingClientRect();
+      const x = (clientX - r.left) / r.width - .5;
+      const y = (clientY - r.top) / r.height - .5;
+      el.style.setProperty("--rx", `${-y * 8}deg`);
+      el.style.setProperty("--ry", `${x * 10}deg`);
+      el.style.setProperty("--mx", `${(x + .5) * 100}%`);
+      el.style.setProperty("--my", `${(y + .5) * 100}%`);
+      delete el.dataset.tiltBusy;
+    });
   };
 
   return (
