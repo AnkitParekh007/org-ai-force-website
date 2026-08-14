@@ -64,21 +64,25 @@ const agents: Agent[] = [
 
 const categories = ["All", "Engineering", "Product", "Operations", "Knowledge", "Leadership", "Finance", "Support"];
 
-function Avatar({ agent, className = "", lazy = false }: { agent: Agent; className?: string; lazy?: boolean }) {
+function Avatar({ agent, className = "", lazy = false, defer = false }: { agent: Agent; className?: string; lazy?: boolean; defer?: boolean }) {
   const [loaded, setLoaded] = useState(false);
-  if (!lazy) return <img className={`avatar ${className}`} src={`/agents/${agent.slug}.png`} alt={`${agent.name}, ${agent.role} AI agent`} decoding="async" width="1254" height="1254" />;
-  return <span className={`avatar-stack ${loaded ? "is-loaded" : ""}`}>
-    <img className="avatar-placeholder" src={`/agents/placeholders/${agent.slug}.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async" width="112" height="112" />
+  const image = <picture className="avatar-picture">
+    <source srcSet={`/agents/avif/${agent.slug}.avif`} type="image/avif" />
     <img
       className={`avatar ${className}`}
       src={`/agents/${agent.slug}.png`}
       alt={`${agent.name}, ${agent.role} AI agent`}
-      loading={lazy ? "lazy" : "eager"}
+      loading={lazy || defer ? "lazy" : "eager"}
       decoding="async"
-      width="1254"
-      height="1254"
+      width="720"
+      height="720"
       onLoad={() => setLoaded(true)}
     />
+  </picture>;
+  if (!lazy) return image;
+  return <span className={`avatar-stack ${loaded ? "is-loaded" : ""}`}>
+    <img className="avatar-placeholder" src={`/agents/placeholders/${agent.slug}.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async" width="112" height="112" />
+    {image}
   </span>;
 }
 
@@ -208,7 +212,7 @@ export default function Home() {
         <article><p>“Our DevOpsy pipeline config just... worked. First try. That never happens.”</p><h3>Platform Engineer</h3><span>Enterprise pilot</span></article>
       </div></section>
 
-      <section className="cta shell"><div><span className="section-no">GET STARTED</span><h2>Your AI workforce is<br/><em>one click away.</em></h2><p>Free forever for 2 agents. No setup, no credit card, no waiting. Install, run, and get work done.</p></div><a className="button light" href="#agents">Start free — no login needed <span>→</span></a><div className="cta-orbit"><Avatar agent={agents[13]}/><Avatar agent={agents[40]}/><Avatar agent={agents[52]}/></div></section>
+      <section className="cta shell"><div><span className="section-no">GET STARTED</span><h2>Your AI workforce is<br/><em>one click away.</em></h2><p>Free forever for 2 agents. No setup, no credit card, no waiting. Install, run, and get work done.</p></div><a className="button light" href="#agents">Start free — no login needed <span>→</span></a><div className="cta-orbit"><Avatar agent={agents[13]} defer/><Avatar agent={agents[40]} defer/><Avatar agent={agents[52]} defer/></div></section>
 
       <footer className="shell"><a className="brand" href="#top"><span className="brand-mark">AEF</span><span>AI EMPLOYEE FORCE</span></a><p>Your 24/7 orchestration layer for governed AI employees.</p><a href="https://github.com/ai-employee-force/ai-employee-force.github.io" target="_blank" rel="noreferrer">View source →</a></footer>
 

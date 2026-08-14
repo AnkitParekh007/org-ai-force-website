@@ -41,4 +41,8 @@ body{background-color:var(--bg);background-image:radial-gradient(ellipse 90% 55%
 .avatar-placeholder{opacity:.72;filter:grayscale(1) contrast(.72) brightness(.82);z-index:1;transition:opacity .3s ease;animation:placeholderPulse 1.6s ease-in-out infinite}
 .avatar-stack.is-loaded .avatar{opacity:1}
 .avatar-stack.is-loaded .avatar-placeholder{opacity:0;animation:none}
+.avatar-picture{display:contents}
+.cta-orbit>.avatar-picture:nth-child(1) .avatar{left:40px;top:35px}
+.cta-orbit>.avatar-picture:nth-child(2) .avatar{right:-8px;top:175px}
+.cta-orbit>.avatar-picture:nth-child(3) .avatar{left:90px;bottom:-8px}
 @keyframes placeholderPulse{50%{opacity:.42;filter:grayscale(1) contrast(.7) brightness(.98)}}
