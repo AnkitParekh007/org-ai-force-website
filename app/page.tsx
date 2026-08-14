@@ -116,6 +116,51 @@ export default function Home() {
 
   const shown = useMemo(() => agents.filter(a => (filter === "All" || a.category === filter) && `${a.name} ${a.role} ${a.description}`.toLowerCase().includes(query.toLowerCase())), [filter, query]);
 
+  useEffect(() => {
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) return;
+    const root = document.documentElement;
+    root.classList.add("motion-ready");
+    const selector = [
+      ".section-intro", ".system-copy", ".agents-head", ".toolbar", ".legacy-heading",
+      ".comparison-wrap", ".legacy-section blockquote", ".principles article", ".flow-row",
+      ".agent-card", ".legacy-grid article", ".usecase-grid article", ".cta > div",
+      ".cta > .button", "footer > *",
+    ].join(",");
+    const items = Array.from(document.querySelectorAll<HTMLElement>(selector));
+    items.forEach((item, index) => {
+      item.classList.add("motion-item");
+      item.style.setProperty("--reveal-delay", `${(index % 6) * 65}ms`);
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in-view");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    items.forEach((item) => observer.observe(item));
+    let frame = 0;
+    const updateScrollMotion = () => {
+      frame = 0;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      root.style.setProperty("--scroll-progress", `${max > 0 ? scrollY / max : 0}`);
+      const heroShift = Math.min(scrollY, 900);
+      root.style.setProperty("--orb-one-shift", `${heroShift * .055}px`);
+      root.style.setProperty("--orb-two-shift", `${heroShift * -.035}px`);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(updateScrollMotion);
+    };
+    updateScrollMotion();
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [shown]);
+
   const tilt = (e: MouseEvent<HTMLElement>) => {
     const el = e.currentTarget;
     const r = el.getBoundingClientRect();
@@ -129,6 +174,7 @@ export default function Home() {
 
   return (
     <main>
+      <div className="scroll-progress" aria-hidden="true" />
       <nav className="nav shell">
         <a className="brand" href="#top" aria-label="AI Employee Force home"><span className="brand-mark">AEF</span><span>AI EMPLOYEE FORCE</span></a>
         <div className="nav-links"><a href="#solution">How it works</a><a href="#agents">Marketplace</a><a href="#platform">Platform</a></div>

@@ -31,6 +31,8 @@ test("ships agent imagery and social preview metadata", async () => {
   assert.match(page, /Toggle color theme/);
   assert.match(page, /Search agents/);
   assert.match(page, /type="image\/avif"/);
+  assert.match(page, /IntersectionObserver/);
+  assert.match(page, /scroll-progress/);
   await access(new URL("../public/og.png", import.meta.url));
   await access(new URL("../public/agents/fronto.png", import.meta.url));
   await access(new URL("../public/agents/placeholders/fronto.webp", import.meta.url));
