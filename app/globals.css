@@ -35,3 +35,10 @@ body{background-color:var(--bg);background-image:radial-gradient(ellipse 90% 55%
 .avatar-glass{background:linear-gradient(120deg,rgba(34,211,238,.09),transparent 30%,transparent 72%,color-mix(in srgb,var(--agent-accent) 14%,transparent))}
 :root[data-theme="dark"] .agent-visual:before{background:linear-gradient(115deg,transparent 28%,rgba(34,211,238,.055) 46%,transparent 64%)}
 :root[data-theme="dark"] .avatar-aura{opacity:.38}
+.avatar-stack{position:absolute;width:94%;height:94%;display:grid;place-items:center;transform:translateZ(34px);z-index:3}
+.avatar-stack .avatar,.avatar-placeholder{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:contain;transform:none!important}
+.avatar-stack .avatar{opacity:0;transition:opacity .38s ease;z-index:2}
+.avatar-placeholder{opacity:.72;filter:grayscale(1) contrast(.72) brightness(.82);z-index:1;transition:opacity .3s ease;animation:placeholderPulse 1.6s ease-in-out infinite}
+.avatar-stack.is-loaded .avatar{opacity:1}
+.avatar-stack.is-loaded .avatar-placeholder{opacity:0;animation:none}
+@keyframes placeholderPulse{50%{opacity:.42;filter:grayscale(1) contrast(.7) brightness(.98)}}

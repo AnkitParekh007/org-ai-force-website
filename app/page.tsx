@@ -64,8 +64,22 @@ const agents: Agent[] = [
 
 const categories = ["All", "Engineering", "Product", "Operations", "Knowledge", "Leadership", "Finance", "Support"];
 
-function Avatar({ agent, className = "" }: { agent: Agent; className?: string }) {
-  return <img className={`avatar ${className}`} src={`/agents/${agent.slug}.png`} alt={`${agent.name}, ${agent.role} AI agent`} />;
+function Avatar({ agent, className = "", lazy = false }: { agent: Agent; className?: string; lazy?: boolean }) {
+  const [loaded, setLoaded] = useState(false);
+  if (!lazy) return <img className={`avatar ${className}`} src={`/agents/${agent.slug}.png`} alt={`${agent.name}, ${agent.role} AI agent`} decoding="async" width="1254" height="1254" />;
+  return <span className={`avatar-stack ${loaded ? "is-loaded" : ""}`}>
+    <img className="avatar-placeholder" src={`/agents/placeholders/${agent.slug}.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async" width="112" height="112" />
+    <img
+      className={`avatar ${className}`}
+      src={`/agents/${agent.slug}.png`}
+      alt={`${agent.name}, ${agent.role} AI agent`}
+      loading={lazy ? "lazy" : "eager"}
+      decoding="async"
+      width="1254"
+      height="1254"
+      onLoad={() => setLoaded(true)}
+    />
+  </span>;
 }
 
 const accentByCategory: Record<string, string> = {
@@ -73,11 +87,11 @@ const accentByCategory: Record<string, string> = {
   Knowledge: "#fbbf24", Leadership: "#f472b6", Finance: "#4ade80", Support: "#60a5fa",
 };
 
-function AvatarScene({ agent }: { agent: Agent }) {
+function AvatarScene({ agent, lazy = false }: { agent: Agent; lazy?: boolean }) {
   return <div className="avatar-scene" style={{ "--agent-accent": accentByCategory[agent.category] || "#b8ff36" } as React.CSSProperties}>
     <div className="avatar-aura" />
     <div className="avatar-orbit"><i/><i/><i/></div>
-    <Avatar agent={agent} className="avatar-main" />
+    <Avatar agent={agent} className="avatar-main" lazy={lazy} />
     <div className="avatar-glass" />
     <div className="avatar-pedestal"><span/><b/></div>
   </div>;
@@ -161,7 +175,7 @@ export default function Home() {
         <div className="toolbar"><div className="filters" role="group" aria-label="Filter agents by discipline">{categories.map(c=><button key={c} className={filter===c?"active":""} onClick={()=>setFilter(c)}>{c}</button>)}</div><label className="search"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search agents" aria-label="Search agents" /></label></div>
         <div className="agent-grid">
           {shown.map((agent, i)=><button className="agent-card" key={agent.slug} onMouseMove={tilt} onMouseLeave={e=>{e.currentTarget.style.setProperty('--rx','0deg');e.currentTarget.style.setProperty('--ry','0deg')}} onClick={()=>setSelected(agent)} style={{"--delay":`${(i%12)*35}ms`,"--agent-accent":accentByCategory[agent.category] || "#b8ff36"} as React.CSSProperties}>
-            <div className="agent-visual"><span className="status-dot"/><span className="depth-label">LIVE / 3D</span><AvatarScene agent={agent}/></div>
+            <div className="agent-visual"><span className="status-dot"/><span className="depth-label">LIVE / 3D</span><AvatarScene agent={agent} lazy/></div>
             <div className="agent-meta"><span>{agent.category}</span><h3>{agent.name}</h3><p>{agent.role}</p><i>↗</i></div>
           </button>)}
         </div>

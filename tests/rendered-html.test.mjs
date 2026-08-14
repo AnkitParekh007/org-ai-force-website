@@ -30,8 +30,10 @@ test("ships agent imagery and social preview metadata", async () => {
   assert.match(layout, /\/og\.png/);
   assert.match(page, /Toggle color theme/);
   assert.match(page, /Search agents/);
+  assert.match(page, /loading={lazy \? "lazy" : "eager"}/);
   await access(new URL("../public/og.png", import.meta.url));
   await access(new URL("../public/agents/fronto.png", import.meta.url));
+  await access(new URL("../public/agents/placeholders/fronto.webp", import.meta.url));
   await access(new URL("../public/generated/hero-squad.png", import.meta.url));
   await assert.rejects(access(new URL("../app/_sites-preview", root)));
 });
