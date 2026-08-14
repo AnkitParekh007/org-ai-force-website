@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 
 type Agent = { slug: string; name: string; role: string; category: string; description: string };
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
 const agents: Agent[] = [
   ["fronto","Fronto","Frontend Developer","Engineering","Ships accessible, performant interfaces with design-system discipline."],
@@ -67,10 +68,10 @@ const categories = ["All", "Engineering", "Product", "Operations", "Knowledge", 
 function Avatar({ agent, className = "", lazy = false, defer = false }: { agent: Agent; className?: string; lazy?: boolean; defer?: boolean }) {
   const [loaded, setLoaded] = useState(false);
   const image = <picture className="avatar-picture">
-    <source srcSet={`/agents/avif/${agent.slug}.avif`} type="image/avif" />
+    <source srcSet={assetPath(`agents/avif/${agent.slug}.avif`)} type="image/avif" />
     <img
       className={`avatar ${className}`}
-      src={`/agents/${agent.slug}.png`}
+      src={assetPath(`agents/${agent.slug}.png`)}
       alt={`${agent.name}, ${agent.role} AI agent`}
       loading={lazy || defer ? "lazy" : "eager"}
       decoding="async"
@@ -81,7 +82,7 @@ function Avatar({ agent, className = "", lazy = false, defer = false }: { agent:
   </picture>;
   if (!lazy) return image;
   return <span className={`avatar-stack ${loaded ? "is-loaded" : ""}`}>
-    <img className="avatar-placeholder" src={`/agents/placeholders/${agent.slug}.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async" width="112" height="112" />
+    <img className="avatar-placeholder" src={assetPath(`agents/placeholders/${agent.slug}.webp`)} alt="" aria-hidden="true" loading="lazy" decoding="async" width="112" height="112" />
     {image}
   </span>;
 }
@@ -194,7 +195,7 @@ export default function Home() {
           <div className="orbit orbit-a"/><div className="orbit orbit-b"/>
           <div className="squad-platform"><i/><i/><b/></div>
           <div className="hero-squad-wrap">
-            <img className="hero-squad" src="/generated/hero-squad.png" alt="Producto, Fronto and Dbo as a cinematic 3D AI agent squad" />
+            <img className="hero-squad" src={assetPath("generated/hero-squad.png")} alt="Producto, Fronto and Dbo as a cinematic 3D AI agent squad" />
             <div className="hero-squad-shine" />
           </div>
           <span className="agent-chip"><b>Producto — Product Manager</b><small>Completed · Structured output ready</small></span>
